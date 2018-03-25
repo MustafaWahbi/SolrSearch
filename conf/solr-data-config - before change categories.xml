@@ -1,0 +1,136 @@
+<dataConfig>
+    <dataSource type="JdbcDataSource"
+                driver="com.mysql.jdbc.Driver"
+                url="jdbc:mysql://ocs-db-prod.copp8djtbybs.eu-west-1.rds.amazonaws.com/ui-ocs-db-prod"
+                user="ocs_web_user"
+                password="FdskCsei#kj92kkCEcrl"/>
+    <document>
+        <entity name="magento"
+                query="(SELECT DISTINCT desc1.value AS 'description',coalesce(B.parent_id,0) AS 'parent_id',e.entity_id AS 'id', e.sku, c299.value AS 'parent_category',c299.entity_id AS 'parent_category_id', c199.value AS 'level1_category',c199.entity_id AS 'level1_category_id', c99.value AS 'level2_category',c99.entity_id AS 'Level2_category_id', e.type_id, coalesce(s3.value,0) AS 'STATUS', coalesce(name1.value,0) AS 'NAME', coalesce(brand.value,0) AS 'brand', coalesce(special_price.value,0) AS 'special_price',coalesce(price.value,0) AS 'price', coalesce(image.value,0) AS 'image', coalesce(oimg.value,0) AS 'product_otherimages',
+coalesce(stock.qty,0) AS 'qty', coalesce(stock.is_in_stock,0)  AS 'is_in_stock',
+'288' AS 'color_id', coalesce(vcolor12.option_id,0) AS 'color_value',coalesce(vcolor12.value,0) AS 'color',coalesce(vcolor12.value,0) AS 'color_label',
+'287' AS 'size_id', coalesce(vsize12.option_id,0) AS 'size_value', coalesce(vsize12.value,0) AS 'size', coalesce(vsize12.value,0) AS 'size_label',
+'282' AS 'primary_color_id', coalesce(popt.option_id,0) AS 'primary_color_value', coalesce(popt.value,0) AS 'primary_color', coalesce(popt.value,0) AS 'primary_color_label',
+'298' AS 'product_type_id', coalesce(popt2.option_id,0) AS 'product_type_value', coalesce(popt2.value,0) AS 'product_type', coalesce(popt2.value,0) AS 'product_type_label'
+FROM catalog_product_entity e
+
+  LEFT JOIN catalog_category_product AS z ON e.entity_id = z.`product_id`
+  LEFT JOIN cataloginventory_stock_item AS stock ON e.entity_id = stock.product_id
+  LEFT OUTER JOIN catalog_product_relation AS B ON e.entity_id=B.child_id AND e.type_id = 'SIMPLE'
+  LEFT JOIN catalog_product_entity_int s3 ON e.entity_id = s3.entity_id AND s3.store_id = 0 AND s3.attribute_id = ((SELECT attribute_id FROM eav_attribute WHERE attribute_code = 'STATUS' AND entity_type_id = 4))
+  LEFT JOIN catalog_product_entity_varchar brand ON e.entity_id = brand.entity_id AND brand.store_id = 0 AND brand.attribute_id = ((SELECT attribute_id FROM eav_attribute WHERE attribute_code = 'brand' AND entity_type_id = 4))
+  LEFT JOIN catalog_product_entity_varchar name1 ON e.entity_id = name1.entity_id AND name1.store_id = 0 AND name1.attribute_id = (SELECT attribute_id FROM eav_attribute WHERE attribute_code = 'NAME' AND entity_type_id = 4)
+  LEFT JOIN catalog_product_entity_decimal price ON e.entity_id = price.entity_id AND price.store_id = 0 AND price.attribute_id = (SELECT attribute_id FROM eav_attribute WHERE attribute_code = 'price' AND entity_type_id = 4)
+  LEFT JOIN catalog_product_entity_decimal special_price ON e.entity_id = special_price.entity_id AND special_price.store_id = 0 AND special_price.attribute_id = (SELECT attribute_id FROM eav_attribute WHERE attribute_code = 'special_price' AND entity_type_id = 4)
+  LEFT JOIN catalog_product_entity_varchar image ON e.entity_id = image.entity_id AND image.store_id = 0 AND image.attribute_id = ((SELECT attribute_id FROM eav_attribute WHERE attribute_code = 'ksk_thumbnail' AND entity_type_id = 4))
+  LEFT JOIN catalog_product_entity_int AS vsize ON vsize.entity_id = e.entity_id AND vsize.store_id = 0 AND vsize.attribute_id = (SELECT attribute_id FROM eav_attribute WHERE attribute_code = 'variant_size' AND entity_type_id = 4)
+  LEFT JOIN eav_attribute_option_value vsize12 ON vsize.value = vsize12.option_id AND vsize12.store_id = 0
+  LEFT JOIN catalog_product_entity_int AS vcolor ON vcolor.entity_id = e.entity_id AND vcolor.store_id = 0 AND vcolor.attribute_id = (SELECT attribute_id FROM eav_attribute WHERE attribute_code = 'variant_color' AND entity_type_id = 4)
+  LEFT JOIN catalog_product_entity_int AS pcolor ON pcolor.entity_id = e.entity_id AND pcolor.store_id = 0 AND pcolor.attribute_id = (SELECT attribute_id FROM eav_attribute WHERE attribute_code = 'primary_color' AND entity_type_id = 4)
+  LEFT JOIN eav_attribute_option_value popt ON pcolor.value = popt.option_id AND popt.store_id = 0
+
+  LEFT JOIN catalog_product_entity_int AS ptype ON ptype.entity_id = e.entity_id AND ptype.store_id = 0 AND ptype.attribute_id = (SELECT attribute_id FROM eav_attribute WHERE attribute_code = 'ksk_product_type' AND entity_type_id = 4)
+  LEFT JOIN eav_attribute_option_value popt2 ON ptype.value = popt2.option_id AND popt2.store_id = 0
+
+  LEFT JOIN eav_attribute_option_value vcolor12 ON vcolor.value = vcolor12.option_id AND vcolor12.store_id = 0
+  LEFT JOIN catalog_product_entity_text desc1 ON e.entity_id = desc1.entity_id AND desc1.store_id = 0 AND desc1.attribute_id = ((SELECT attribute_id FROM eav_attribute WHERE attribute_code = 'description' AND entity_type_id = 4))
+  LEFT JOIN catalog_product_entity_text oimg ON e.entity_id = oimg.entity_id AND oimg.store_id = 0 AND oimg.attribute_id = ((SELECT attribute_id FROM eav_attribute WHERE attribute_code = 'ksk_otherimages' AND entity_type_id = 4))
+  LEFT JOIN catalog_category_entity AS a99 ON z.category_id = a99.entity_id
+  LEFT JOIN catalog_category_entity_varchar AS c99 ON a99.entity_id = c99.entity_id
+  LEFT JOIN catalog_category_entity AS b99 ON a99.parent_id = b99.entity_id
+  LEFT JOIN catalog_category_entity_varchar AS c199 ON b99.entity_id = c199.entity_id
+  LEFT JOIN catalog_category_entity AS c499 ON b99.parent_id = c499.entity_id
+  LEFT JOIN catalog_category_entity_varchar AS c299 ON c499.entity_id = c299.entity_id WHERE c99.attribute_id = 45 AND c99.store_id = 0 AND c199.attribute_id = 45 AND c199.store_id = 0 AND c299.attribute_id = 45 AND c299.store_id = 0 AND (c199.value != 'default category') AND (c299.value != 'root catalog') AND
+  (c299.value != 'default category' AND c199.value NOT IN ('grooming', 'beauty', 'electronics'))
+  )
+  UNION (
+SELECT DISTINCT desc1.value AS 'description',coalesce(B.parent_id,0) AS 'parent_id',e.entity_id AS 'id', e.sku, c2999.value AS 'parent_category',c2999.entity_id, c1999.value AS 'level1_category',c1999.entity_id, c999.value AS 'level2_category',c999.entity_id, e.type_id, coalesce(s3.value,0) AS 'STATUS', coalesce(name1.value,0) AS 'NAME', coalesce(brand.value,0) AS 'brand', coalesce(special_price.value,0) AS 'special_price',coalesce(price.value,0) AS 'price', coalesce(image.value,0) AS 'image', coalesce(oimg.value,0) AS 'product_otherimages',
+coalesce(stock.qty,0) AS 'qty', coalesce(stock.is_in_stock,0)  AS 'is_in_stock',
+'288' AS 'color_id', coalesce(vcolor12.option_id,0) AS 'color_value',coalesce(vcolor12.value,0) AS 'color',coalesce(vcolor12.value,0) AS 'color_label',
+'287' AS 'size_id', coalesce(vsize12.option_id,0) AS 'size_value', coalesce(vsize12.value,0) AS 'size', coalesce(vsize12.value,0) AS 'size_label',
+'282' AS 'primary_color_id', coalesce(popt.option_id,0) AS 'primary_color_value', coalesce(popt.value,0) AS 'primary_color', coalesce(popt.value,0) AS 'primary_color_label',
+'298' AS 'product_type_id', coalesce(popt2.option_id,0) AS 'product_type_value', coalesce(popt2.value,0) AS 'product_type', coalesce(popt2.value,0) AS 'product_type_label'
+
+  FROM catalog_product_entity e
+
+  LEFT JOIN catalog_category_product AS z ON e.entity_id = z.`product_id`
+  LEFT JOIN cataloginventory_stock_item AS stock ON e.entity_id = stock.product_id
+  LEFT OUTER JOIN catalog_product_relation AS B ON e.entity_id=B.child_id AND e.type_id = 'SIMPLE'
+  LEFT JOIN catalog_product_entity_int s3 ON e.entity_id = s3.entity_id AND s3.store_id = 0 AND s3.attribute_id = ((SELECT attribute_id FROM eav_attribute WHERE attribute_code = 'STATUS' AND entity_type_id = 4))
+  LEFT JOIN catalog_product_entity_varchar brand ON e.entity_id = brand.entity_id AND brand.store_id = 0 AND brand.attribute_id = ((SELECT attribute_id FROM eav_attribute WHERE attribute_code = 'brand' AND entity_type_id = 4))
+  LEFT JOIN catalog_product_entity_varchar name1 ON e.entity_id = name1.entity_id AND name1.store_id = 0 AND name1.attribute_id = (SELECT attribute_id FROM eav_attribute WHERE attribute_code = 'name' AND entity_type_id = 4)
+  LEFT JOIN catalog_product_entity_decimal price ON e.entity_id = price.entity_id AND price.store_id = 0 AND price.attribute_id = (SELECT attribute_id FROM eav_attribute WHERE attribute_code = 'price' AND entity_type_id = 4)
+  LEFT JOIN catalog_product_entity_decimal special_price ON e.entity_id = special_price.entity_id AND special_price.store_id = 0 AND special_price.attribute_id = (SELECT attribute_id FROM eav_attribute WHERE attribute_code = 'special_price' AND entity_type_id = 4)
+  LEFT JOIN catalog_product_entity_varchar image ON e.entity_id = image.entity_id AND image.store_id = 0 AND image.attribute_id = ((SELECT attribute_id FROM eav_attribute WHERE attribute_code = 'ksk_thumbnail' AND entity_type_id = 4))
+  LEFT JOIN catalog_product_entity_int AS vsize ON vsize.entity_id = e.entity_id AND vsize.store_id = 0 AND vsize.attribute_id = (SELECT attribute_id FROM eav_attribute WHERE attribute_code = 'variant_size' AND entity_type_id = 4)
+  LEFT JOIN eav_attribute_option_value vsize12 ON vsize.value = vsize12.option_id AND vsize12.store_id = 0
+  LEFT JOIN catalog_product_entity_int AS vcolor ON vcolor.entity_id = e.entity_id AND vcolor.store_id = 0 AND vcolor.attribute_id = (SELECT attribute_id FROM eav_attribute WHERE attribute_code = 'variant_color' AND entity_type_id = 4)
+  LEFT JOIN eav_attribute_option_value vcolor12 ON vcolor.value = vcolor12.option_id AND vcolor12.store_id = 0
+  LEFT JOIN catalog_product_entity_int AS ptype ON ptype.entity_id = e.entity_id AND ptype.store_id = 0 AND ptype.attribute_id = (SELECT attribute_id FROM eav_attribute WHERE attribute_code = 'ksk_product_type' AND entity_type_id = 4)
+  LEFT JOIN eav_attribute_option_value popt2 ON ptype.value = popt2.option_id AND popt2.store_id = 0
+  LEFT JOIN catalog_product_entity_int AS pcolor ON pcolor.entity_id = e.entity_id AND pcolor.store_id = 0 AND pcolor.attribute_id = (SELECT attribute_id FROM eav_attribute WHERE attribute_code = 'primary_color' AND entity_type_id = 4)
+  LEFT JOIN eav_attribute_option_value popt ON pcolor.value = popt.option_id AND popt.store_id = 0
+  LEFT JOIN catalog_product_entity_text desc1 ON e.entity_id = desc1.entity_id AND desc1.store_id = 0 AND desc1.attribute_id = ((SELECT attribute_id FROM eav_attribute WHERE attribute_code = 'description' AND entity_type_id = 4))
+   LEFT JOIN catalog_product_entity_text oimg ON e.entity_id = oimg.entity_id AND oimg.store_id = 0 AND oimg.attribute_id = ((SELECT attribute_id FROM eav_attribute WHERE attribute_code = 'ksk_otherimages' AND entity_type_id = 4))
+  LEFT JOIN catalog_category_entity AS a999 ON z.category_id = a999.entity_id
+  LEFT JOIN catalog_category_entity_varchar AS c999 ON a999.entity_id = c999.entity_id
+  LEFT JOIN catalog_category_entity AS b999 ON a999.parent_id = b999.entity_id
+  LEFT JOIN catalog_category_entity_varchar AS c1999 ON b999.entity_id = c1999.entity_id
+  LEFT JOIN catalog_category_entity AS c4999 ON b999.parent_id = c4999.entity_id
+  LEFT JOIN catalog_category_entity_varchar AS c2999 ON c4999.entity_id = c2999.entity_id WHERE c999.attribute_id = 45 AND c999.store_id = 0 AND c1999.attribute_id = 45 AND c1999.store_id = 0 AND c2999.attribute_id = 45 AND c2999.store_id = 0 AND (c1999.value != 'default category') AND (c2999.value != 'root catalog') AND (c1999.value IN ('grooming', 'beauty', 'electronics'))
+) limit 0,450000">
+           <!-- 600000<field column="brand" name="brand"/>-->
+
+            <field column="parent_id" name="parent_id" />
+            <field column="id" name="id" />
+            <field column="sku" name="sku" />
+
+
+            <field column="parent_category" name="parent_category" />
+			<field column="parent_category_id" name="parent_category_id" />
+            <field column="level1_category" name="level1_category" />
+            <field column="level1_category_id" name="level1_category_id" />			
+            <field column="level2_category" name="level2_category" />
+            <field column="level2_category_id" name="level2_category_id" />			
+
+            <field column="type_id" name="type_id" />
+            <field column="product_type" name="product_type" />
+            <field column="status" name="status"/>
+            <field column="name" name="name" />
+            <field column="brand" name="brand" />
+
+            <field column="special_price" name="special_price"/>
+            <field column="price" name="price"/>
+
+            <field column="image" name="image" />
+            <field column="product_otherimages" name="product_otherimages" />
+
+            <field column="qty" name="qty"/>
+            <field column="is_in_stock" name="is_in_stock"/>
+
+                <field column="color" name="color" />
+                <field column="color_id" name="color_id" />
+                <field column="color_value" name="color_value" />
+                <field column="color_label" name="color_label" />
+
+                <field column="primary_color" name="primary_color" />
+                <field column="primary_color_id" name="primary_color_id" />
+                <field column="primary_color_value" name="primary_color_value" />
+                <field column="primary_color_label" name="primary_color_label" />
+
+                <field column="size" name="size" />
+                <field column="size_id" name="size_id" />
+                <field column="size_value" name="size_value" />
+                <field column="size_label" name="size_label" />
+
+                <field column="product_type" name="product_type" />
+                <field column="product_type_id" name="product_type_id" />
+                <field column="product_type_value" name="product_type_value" />
+                <field column="product_type_label" name="product_type_label" />
+
+
+            <field column="description" name="description" />
+
+        </entity>
+    </document>
+</dataConfig>

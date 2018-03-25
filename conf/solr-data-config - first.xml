@@ -1,0 +1,27 @@
+<dataConfig>
+    <dataSource type="JdbcDataSource"
+                driver="com.mysql.jdbc.Driver"
+                url="jdbc:mysql://ocs-db-prod.copp8djtbybs.eu-west-1.rds.amazonaws.com/ui-ocs-db-prod"
+                user="ocs_web_user"
+                password="FdskCsei#kj92kkCEcrl"/>
+    <document>
+        <entity name="magento"
+                query="select * from elastic_db_sync_view">
+           <!-- <field column="brand" name="brand"/>-->
+
+            <field column="id" name="id" />
+            <field column="name" name="name" />
+            <field column="brand" name="brand" />
+            <field column="color" name="color" />
+            <field column="complete_category" name="complete_category" />
+            <field column="description" name="description" />
+            <field column="image" name="image" />
+            <field column="is_in_stock" name="is_in_stock" />
+            <field column="parent_category" name="parent_category" />
+            <field column="level1_category" name="level1_category" />
+            <field column="level2_category" name="level2_category" />
+            <field column="parent_sku" name="parent_sku" />
+            <field column="price" name="price"/>
+        </entity>
+    </document>
+</dataConfig>
